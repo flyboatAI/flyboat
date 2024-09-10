@@ -1,0 +1,24 @@
+default_stages: [commit]
+repos:
+  - repo: local
+    hooks:
+      - id: ruff_fix
+        name: ruff fix
+        entry: ruff check --config ./pyproject.toml --fix
+        language: system
+        pass_filenames: false
+        types: [ python ]
+        always_run: true
+      - id: ruff
+        name: ruff format
+        entry: ruff format --config ./pyproject.toml
+        language: system
+        types: [python]
+        always_run: true
+      - id: pytest
+        name: pytest
+        entry: venv/Scripts/python.exe -m pytest -vv -W ignore::DeprecationWarning
+        language: script
+        pass_filenames: false
+        types: [python]
+        always_run: true

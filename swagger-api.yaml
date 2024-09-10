@@ -1,0 +1,3508 @@
+swagger: "2.0"
+info:
+  title: 可视化建模平台 - API 文档
+  description: |-
+    ## 如若发现 API 文档中任何不清晰的地方，请及时联系开发人员
+  version: 1.0.0
+
+
+tags:
+  - name: configuration
+    description: 配置算子相关接口
+  - name: element
+    description: 算子属性相关接口
+  - name: init
+    description: 初始化算子相关接口
+  - name: pipelining
+    description: 流水线相关接口
+  - name: parameterization
+    description: 参数化系统相关接口
+
+###################################################################################
+#                                                                                 #
+#                   Element Configuration Interface                               #
+#                                                                                 #
+###################################################################################
+
+paths:
+  /configuration/sync_input:
+    post:
+      tags:
+        - configuration
+      summary: 同步输入算子配置
+      parameters:
+        - in: body
+          description: 同步输入算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - json_key
+              - nick_name
+              - value_type
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+              json_key:
+                type: string
+              nick_name:
+                type: string
+              description:
+                type: string
+              value_type:
+                type: string
+                enum: [table, int_range, year_range, month_range, day_range]
+              start_key:
+                type: string
+              end_key:
+                type: string
+              step_key:
+                type: string
+              single_key:
+                type: string
+              sort:
+                type: integer
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/sync_output:
+    post:
+      tags:
+        - configuration
+      summary: 同步输出算子配置
+      parameters:
+        - in: body
+          description: 同步输出算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - key
+              - fields
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              key:
+                type: string
+              nick_name:
+                type: string
+              fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/data_model:
+    post:
+      tags:
+        - configuration
+      summary: 数据模型算子配置
+      parameters:
+        - in: body
+          description: 数据模型算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - data_model_id
+              - data_model_type
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              data_model_id:
+                type: string
+              data_model_type:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/model_file_output:
+    post:
+      tags:
+        - configuration
+      summary: 模型文件输出算子配置
+      parameters:
+        - in: body
+          description: 模型文件输出算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - model_name
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              model_name:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/data_filter:
+    post:
+      tags:
+        - configuration
+      summary: 数据过滤算子配置
+      parameters:
+        - in: body
+          description: 数据过滤算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - filter_type
+              - filter_compare_fields
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              filter_type:
+                type: string
+                enum: [all, any]
+              filter_compare_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/CompareField'
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/data_split:
+    post:
+      tags:
+        - configuration
+      summary: 数据切分算子配置
+      parameters:
+        - in: body
+          description: 数据切分算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - split_type
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              split_type:
+                type: string
+                enum: [train_test, train_test_valid]
+              random_seed:
+                type: integer
+              train_percent:
+                type: integer
+              test_percent:
+                type: integer
+              valid_percent:
+                type: integer
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/role_setting:
+    post:
+      tags:
+        - configuration
+      summary: 角色配置算子配置
+      parameters:
+        - in: body
+          description: 角色配置算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - role_setting_fields
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              role_setting_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/RoleSettingField'
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/column_data_process:
+    post:
+      tags:
+        - configuration
+      summary: 列数据处理算子配置
+      parameters:
+        - in: body
+          description: 列数据处理算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - process_fields
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              process_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/ProcessField'
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/column_type_convert:
+    post:
+      tags:
+        - configuration
+      summary: 列类型转换算子配置
+      parameters:
+        - in: body
+          description: 列类型转换算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - process_fields
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              convert_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/ConvertField'
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/min_max_scaler:
+    post:
+      tags:
+        - configuration
+      summary: 归一化算子配置
+      parameters:
+        - in: body
+          description: 归一化算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - min_max_fields
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              min_max_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/inverse_min_max_scaler:
+    post:
+      tags:
+        - configuration
+      summary: 逆归一化算子配置
+      parameters:
+        - in: body
+          description: 逆归一化算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - inverse_min_max_fields
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              inverse_min_max_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/data_replication:
+    post:
+      tags:
+        - configuration
+      summary: 数据复制算子配置
+      parameters:
+        - in: body
+          description: 数据复制算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - output_port_num
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              output_port_num:
+                type: integer
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/linear_regression_algorithm:
+    post:
+      tags:
+        - configuration
+      summary: 线性回归算法算子配置
+      parameters:
+        - in: body
+          description: 线性回归算法算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - scaler_type
+              - penalty
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              scaler_type:
+                type: string
+                enum: [no, standard_scaler, min_max_scaler]
+              penalty:
+                type: string
+                enum: [l1, l2, l1l2]
+              max_iter:
+                type: integer
+              alpha:
+                type: integer
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/pls_regression_algorithm:
+    post:
+      tags:
+        - configuration
+      summary: 偏最小二乘回归算法算子配置
+      parameters:
+        - in: body
+          description: 偏最小二乘回归算法算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - n_components
+              - scale
+              - max_iter
+              - tol
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              n_components:
+                type: integer
+              scale:
+                type: integer
+              max_iter:
+                type: integer
+              tol:
+                type: number
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/histogram_plot_analyze:
+    post:
+      tags:
+        - configuration
+      summary: 柱状图分析算子配置
+      parameters:
+        - in: body
+          description: 柱状图分析算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - x
+              - y
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              x:
+                type: string
+              y:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/line_plot_analyze:
+    post:
+      tags:
+        - configuration
+      summary: 折线图分析算子配置
+      parameters:
+        - in: body
+          description: 折线图分析算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - x
+              - y
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              x:
+                type: string
+              y:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/scatter_plot_analyze:
+    post:
+      tags:
+        - configuration
+      summary: 散点图分析算子配置
+      parameters:
+        - in: body
+          description: 散点图分析算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - x
+              - y
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              x:
+                type: string
+              y:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/column_filter:
+    post:
+      tags:
+        - configuration
+      summary: 列过滤算子配置
+      parameters:
+        - in: body
+          description: 列过滤算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - filter_fields
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              filter_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/column_add:
+    post:
+      tags:
+        - configuration
+      summary: 列新增算子配置
+      parameters:
+        - in: body
+          description: 列新增算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - add_fields
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              add_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/AddField'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/data_join:
+    post:
+      tags:
+        - configuration
+      summary: 数据连接算子配置
+      parameters:
+        - in: body
+          description: 数据连接算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - prev_node_output_port_arr
+              - prev_node_type_arr
+              - prev_element_id_arr
+              - join_type
+              - join_field
+              - fields
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port_arr:
+                type: array
+                items:
+                  type: integer
+              prev_node_type_arr:
+                type: array
+                items:
+                  type: string
+              prev_element_id_arr:
+                type: array
+                items:
+                  type: string
+              join_type:
+                type: string
+                enum: [inner_join, left_join, full_join]
+              join_field:
+                type: array
+                items:
+                  type: string
+              fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/model_apply:
+      post:
+        tags:
+          - configuration
+        summary: 模型应用算子配置
+        parameters:
+          - in: body
+            description: 模型应用算子参数
+            schema:
+              type: object
+              required:
+                - version_id
+                - element_id
+                - fields
+              properties:
+                version_id:
+                  type: string
+                element_id:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    $ref: '#/definitions/Field'
+        responses:
+          '200':
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/Response'
+
+  /configuration/custom_algorithm:
+      post:
+        tags:
+          - configuration
+        summary: 自定义算法算子配置
+        parameters:
+          - in: body
+            description: 自定义算法算子参数
+            schema:
+              type: object
+              required:
+                - version_id
+                - element_id
+                - algorithm_id
+              properties:
+                version_id:
+                  type: string
+                element_id:
+                  type: string
+                algorithm_id:
+                  type: string
+                params:
+                  type: array
+                  items:
+                    $ref: '#/definitions/Param'
+        responses:
+          '200':
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/Response'
+
+  /configuration/regression_evaluate:
+    post:
+      tags:
+        - configuration
+      summary: 回归评估算子配置
+      parameters:
+        - in: body
+          description: 回归评估算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - evaluate_list
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              evaluate_list:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/classification_evaluate:
+    post:
+      tags:
+        - configuration
+      summary: 分类评估算子配置
+      parameters:
+        - in: body
+          description: 分类评估算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - evaluate_list
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              evaluate_list:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /configuration/analogy_estimation_algorithm:
+    post:
+      tags:
+        - configuration
+      summary: 类比法算子配置
+      parameters:
+        - in: body
+          description: 类比法算子参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+              - weight
+              - L
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+              L:
+                type: number
+              weight:
+                type: array
+                items:
+                  $ref: '#/definitions/AnalogyEstimationAlgorithmField'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+###################################################################################
+#                                                                                 #
+#                           Pipelining Interface                                  #
+#                                                                                 #
+###################################################################################
+
+  /pipelining/manual_execute:
+    post:
+      tags:
+        - pipelining
+      summary: 手动执行流水线接口
+      parameters:
+        - in: body
+          description: 手动执行流水线接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - connect_id
+            properties:
+              version_id:
+                type: string
+              connect_id:
+                type: string
+              sync_input_data:
+                type: array
+                items:
+                  $ref: '#/definitions/SyncInputData'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/api_schedule:
+    post:
+      tags:
+        - pipelining
+      summary: 接口调用执行流水线接口
+      parameters:
+        - in: body
+          description: 接口调用执行流水线接口参数
+          schema:
+            type: object
+            required:
+            properties:
+              sync_input_data:
+                type: array
+                items:
+                  $ref: '#/definitions/SyncInputData'
+        - in: path
+          name: publish_id
+          description: 发布标识
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/recent_process:
+    post:
+      tags:
+        - pipelining
+      summary: 获取最新执行标识接口
+      parameters:
+        - in: body
+          description: 获取最新执行标识接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+            properties:
+              version_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+  
+  /pipelining/insight:
+    post:
+      tags:
+        - pipelining
+      summary: 洞察数据接口
+      parameters:
+        - in: body
+          description: 洞察数据接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - process_id
+              - node_type
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              process_id:
+                type: string
+              node_type:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/publish:
+    post:
+      tags:
+        - pipelining
+      summary: 发布流水线接口
+      parameters:
+        - in: body
+          description: 发布流水线接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - tag_id_list
+            properties:
+              version_id:
+                type: string
+              tag_id_list:
+                type: array
+                items:
+                  type: string
+              description:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'  
+
+  /pipelining/cancel_publish:
+    post:
+      tags:
+        - pipelining
+      summary: 取消发布流水线接口
+      parameters:
+        - in: body
+          description: 取消发布流水线接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+            properties:
+              publish_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'  
+
+  /pipelining/pipelining_list:
+    post:
+      tags:
+        - pipelining
+      summary: 流水线列表接口
+      parameters:
+        - in: body
+          description: 流水线列表接口参数
+          schema:
+            type: object
+            required:
+              - experiment_id
+            properties:
+              experiment_id:
+                type: string
+              pipelining_name:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'  
+
+  /pipelining/change:
+    post:
+      tags:
+        - pipelining
+      summary: 修改流水线接口
+      parameters:
+        - in: body
+          description: 修改流水线接口参数
+          schema:
+            type: object
+            required:
+              - pipelining_id
+            properties:
+              pipelining_id:
+                type: string
+              pipelining_name:
+                type: string
+              description:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/delete:
+    post:
+      tags:
+        - pipelining
+      summary: 删除流水线接口
+      parameters:
+        - in: body
+          description: 删除流水线接口参数
+          schema:
+            type: object
+            required:
+              - pipelining_id
+            properties:
+              pipelining_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/move:
+    post:
+      tags:
+        - pipelining
+      summary: 移动流水线至其他空间接口
+      parameters:
+        - in: body
+          description: 移动流水线至其他空间接口参数
+          schema:
+            type: object
+            required:
+              - pipelining_id
+              - experiment_id
+            properties:
+              pipelining_id:
+                type: string
+              experiment_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/add:
+    post:
+      tags:
+        - pipelining
+      summary: 新增流水线接口
+      parameters:
+        - in: body
+          description: 新增流水线接口参数
+          schema:
+            type: object
+            required:
+              - pipelining_name
+              - experiment_id
+            properties:
+              pipelining_name:
+                type: string
+              experiment_id:
+                type: string
+              description:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/version_list:
+    post:
+      tags:
+        - pipelining
+      summary: 获取某一流水线的全部版本信息列表接口
+      parameters:
+        - in: body
+          description: 获取某一流水线的全部版本信息列表接口参数
+          schema:
+            type: object
+            required:
+              - pipelining_id
+            properties:
+              pipelining_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/logic_flow_config:
+    post:
+      tags:
+        - pipelining
+      summary: 配置画布接口
+      parameters:
+        - in: body
+          description: 配置画布接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - logic_flow
+            properties:
+              version_id:
+                type: string
+              logic_flow:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/dag_config:
+    post:
+      tags:
+        - pipelining
+      summary: 配置画布 DAG 接口
+      parameters:
+        - in: body
+          description: 配置画布 DAG 接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - dag
+            properties:
+              version_id:
+                type: string
+              dag:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/disable_elements:
+    post:
+      tags:
+        - pipelining
+      summary: 算子置为未配置状态接口
+      parameters:
+        - in: body
+          description: 算子置为未配置状态接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - dict
+            properties:
+              version_id:
+                type: string
+              dict:
+                type: object
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /pipelining/copy_version:
+    post:
+      tags:
+        - pipelining
+      summary: 拷贝流水线接口
+      parameters:
+        - in: body
+          description: 拷贝流水线接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - pipelining_id
+            properties:
+              version_id:
+                type: string
+              pipelining_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/sync_input_list:
+    post:
+      tags:
+        - pipelining
+      summary: 获取某一画布上全部同步输入算子列表接口
+      parameters:
+        - in: body
+          description: 获取某一画布上全部同步输入算子列表接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+            properties:
+              version_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/config_sync_input_order:
+    post:
+      tags:
+        - pipelining
+      summary: 配置某一画布上全部同步输入算子列表顺序接口
+      parameters:
+        - in: body
+          description: 配置某一画布上全部同步输入算子列表顺序接口参数
+          schema:
+            type: object
+            required:
+              - element_list
+              - version_id
+            properties:
+              version_id:
+                type: string
+              element_list:
+                type: array
+                items:
+                  $ref: '#/definitions/Order'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/publish_list:
+    post:
+      tags:
+        - pipelining
+      summary: 根据标签标识获取发布列表接口
+      parameters:
+        - in: body
+          description: 根据标签标识获取发布列表接口参数
+          schema:
+            type: object
+            required:
+              - tag_id
+            properties:
+              tag_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/all_publish_list:
+    post:
+      tags:
+        - pipelining
+      summary: 获取全部发布列表接口
+      parameters:
+        - in: body
+          description: 获取全部发布列表接口参数
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/client_list:
+    post:
+      tags:
+        - pipelining
+      summary: 获取全部客户端列表接口
+      parameters:
+        - in: body
+          description: 获取全部客户端列表接口参数
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/client_id_associate_publish_id_list:
+    post:
+      tags:
+        - pipelining
+      summary: 客户端关联发布流水线接口
+      parameters:
+        - in: body
+          description: 客户端关联发布流水线接口参数
+          schema:
+            type: object
+            required:
+              - publish_id_list
+              - client_id
+            properties:
+              publish_id_list:
+                type: array
+                items:
+                  type: string
+              client_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/client_publish_pipelining_list:
+    post:
+      tags:
+        - pipelining
+      summary: 与客户端关联的发布列表接口
+      parameters:
+        - in: body
+          description: 与客户端关联的发布列表接口参数
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/delete_client_associate_publish_id_list:
+    post:
+      tags:
+        - pipelining
+      summary: 删除客户端关联的发布列表接口
+      parameters:
+        - in: body
+          description: 删除客户端关联的发布列表接口参数
+          schema:
+            type: object
+            required:
+              - client_id
+            properties:
+              client_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/call_count:
+    post:
+      tags:
+        - pipelining
+      summary: 获取调用次数接口
+      parameters:
+        - in: body
+          description: 获取调用次数接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+              - start_time
+              - end_time
+            properties:
+              publish_id:
+                type: string
+              start_time:
+                type: string
+              end_time:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/status_count:
+    post:
+      tags:
+        - pipelining
+      summary: 获取调用成功失败接口
+      parameters:
+        - in: body
+          description: 获取调用成功失败接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+              - start_time
+              - end_time
+            properties:
+              publish_id:
+                type: string
+              start_time:
+                type: string
+              end_time:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/audit:
+    post:
+      tags:
+        - pipelining
+      summary: 获取审计信息接口
+      parameters:
+        - in: body
+          description: 获取审计信息接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+            properties:
+              publish_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/private_key_list:
+    post:
+      tags:
+        - pipelining
+      summary: 获取密钥列表接口
+      parameters:
+        - in: body
+          description: 获取密钥列表接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+            properties:
+              publish_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/generate_private_key:
+    post:
+      tags:
+        - pipelining
+      summary: 生成密钥接口
+      parameters:
+        - in: body
+          description: 生成密钥接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+              - secret_name
+            properties:
+              publish_id:
+                type: string
+              secret_name:
+                type: string
+              description:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/delete_private_key:
+    post:
+      tags:
+        - pipelining
+      summary: 删除密钥接口
+      parameters:
+        - in: body
+          description: 删除密钥接口参数
+          schema:
+            type: object
+            required:
+              - private_id
+            properties:
+              private_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/change_publish_information:
+    post:
+      tags:
+        - pipelining
+      summary: 修改发布信息接口
+      parameters:
+        - in: body
+          description: 修改发布信息接口参数
+          schema:
+            type: object
+            required:
+              - publish_id
+              - publish_name
+            properties:
+              publish_id:
+                type: string
+              publish_name:
+                type: string
+              description:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /pipelining/version_name_change:
+    post:
+      tags:
+        - pipelining
+      summary: 修改版本号接口
+      parameters:
+        - in: body
+          description: 修改版本号接口参数
+          schema:
+            type: object
+            required:
+              - pipelining_id
+              - version_id
+              - version_name
+            properties:
+              pipelining_id:
+                type: string
+              version_id:
+                type: string
+              version_name:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+###################################################################################
+#                                                                                 #
+#                       Element Information Interface                             #
+#                                                                                 #
+###################################################################################
+  /element/sync_input:
+    post:
+      tags:
+        - element
+      summary: 获取同步输入算子配置接口
+      parameters:
+        - in: body
+          description: 获取同步输入算子配置参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/sync_output:
+    post:
+      tags:
+        - element
+      summary: 获取同步输出算子配置接口
+      parameters:
+        - in: body
+          description: 获取同步输出算子配置参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_model:
+    post:
+      tags:
+        - element
+      summary: 获取数据模型算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据模型算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_models:
+    post:
+      tags:
+        - element
+      summary: 获取全部数据模型接口
+      parameters:
+        - in: body
+          description: 获取全部数据模型参数
+          schema:
+            type: object
+            required:
+              - data_model_table_name
+            properties:
+              data_model_table_name:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_model_fields:
+    post:
+      tags:
+        - element
+      summary: 根据数据模型标识获取该模型的所有字段接口
+      parameters:
+        - in: body
+          description: 根据数据模型标识获取该模型的所有字段接口参数
+          schema:
+            type: object
+            required:
+              - table_id
+            properties:
+              table_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_model_samples:
+    post:
+      tags:
+        - element
+      summary: 根据数据模型标识获取该模型的样本展示数据接口
+      parameters:
+        - in: body
+          description: 根据数据模型标识获取该模型的样本展示数据接口参数
+          schema:
+            type: object
+            required:
+              - table_name
+            properties:
+              table_name:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/model_file_output:
+    post:
+      tags:
+        - element
+      summary: 获取模型文件输出算子配置接口
+      parameters:
+        - in: body
+          description: 获取模型文件输出算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_filter:
+    post:
+      tags:
+        - element
+      summary: 获取数据过滤算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据过滤算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_split:
+    post:
+      tags:
+        - element
+      summary: 获取数据切分算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据切分算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/role_setting:
+    post:
+      tags:
+        - element
+      summary: 获取角色设置算子配置接口
+      parameters:
+        - in: body
+          description: 获取角色设置算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/column_data_process:
+    post:
+      tags:
+        - element
+      summary: 获取列数据处理算子配置接口
+      parameters:
+        - in: body
+          description: 获取列数据处理算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/column_type_convert:
+    post:
+      tags:
+        - element
+      summary: 获取列类型转换算子配置接口
+      parameters:
+        - in: body
+          description: 获取列类型转换算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/min_max_scaler:
+    post:
+      tags:
+        - element
+      summary: 获取归一化算子配置接口
+      parameters:
+        - in: body
+          description: 获取归一化算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/inverse_min_max_scaler:
+    post:
+      tags:
+        - element
+      summary: 获取逆归一化算子配置接口
+      parameters:
+        - in: body
+          description: 获取逆归一化算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_replication:
+    post:
+      tags:
+        - element
+      summary: 获取数据复制算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据复制算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/model_file:
+    post:
+      tags:
+        - element
+      summary: 获取模型文件算子配置接口
+      parameters:
+        - in: body
+          description: 获取模型文件算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/linear_regression_algorithm:
+    post:
+      tags:
+        - element
+      summary: 获取线性算法算子配置接口
+      parameters:
+        - in: body
+          description: 获取线性算法算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/pls_regression_algorithm:
+    post:
+      tags:
+        - element
+      summary: 获取偏最小二乘算法算子配置接口
+      parameters:
+        - in: body
+          description: 获取偏最小二乘算法算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/histogram_plot_analyze:
+    post:
+      tags:
+        - element
+      summary: 获取柱状图分析算子配置接口
+      parameters:
+        - in: body
+          description: 获取柱状图分析算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/line_plot_analyze:
+    post:
+      tags:
+        - element
+      summary: 获取折线图分析算子配置接口
+      parameters:
+        - in: body
+          description: 获取折线图分析算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/scatter_plot_analyze:
+    post:
+      tags:
+        - element
+      summary: 获取散点图分析算子配置接口
+      parameters:
+        - in: body
+          description: 获取散点图分析算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/column_filter:
+    post:
+      tags:
+        - element
+      summary: 获取列过滤算子配置接口
+      parameters:
+        - in: body
+          description: 获取列过滤算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/column_add:
+    post:
+      tags:
+        - element
+      summary: 获取列新增算子配置接口
+      parameters:
+        - in: body
+          description: 获取列新增算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/arithmetic_function_list:
+    post:
+      tags:
+        - element
+      summary: 获取算术运算函数列表接口
+      parameters:
+        - in: body
+          description: 获取算术运算函数列表接口参数
+          schema:
+            type: object
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/data_join:
+    post:
+      tags:
+        - element
+      summary: 获取数据连接算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据连接算子配置接口参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port_arr
+              - prev_node_type_arr
+              - prev_element_id_arr
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port_arr:
+                type: array
+                items:
+                  type: integer
+              prev_node_type_arr:
+                type: array
+                items:
+                  type: string
+              prev_element_id_arr:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/model_apply:
+    post:
+      tags:
+        - element
+      summary: 获取模型应用算子配置接口
+      parameters:
+        - in: body
+          description: 获取模型应用算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'      
+
+  /element/custom_algorithm:
+    post:
+      tags:
+        - element
+      summary: 获取自定义算法算子配置接口
+      parameters:
+        - in: body
+          description: 获取自定义算法算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'       
+
+  /element/algorithm_params:
+    post:
+      tags:
+        - element
+      summary: 获取算法对应参数接口
+      parameters:
+        - in: body
+          description: 获取算法对应接口参数
+          schema:
+            type: object
+            required:
+              - algorithm_id
+            properties:
+              algorithm:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/regression_evaluate:
+    post:
+      tags:
+        - element
+      summary: 获取回归评估算子配置接口
+      parameters:
+        - in: body
+          description: 获取回归评估算子配置参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/classification_evaluate:
+    post:
+      tags:
+        - element
+      summary: 获取分类评估算子配置接口
+      parameters:
+        - in: body
+          description: 获取分类评估算子配置参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /element/analogy_estimation_algorithm:
+    post:
+      tags:
+        - element
+      summary: 获取类比法算子配置接口
+      parameters:
+        - in: body
+          description: 获取类比法算子配置参数
+          schema:
+            type: object
+            required:
+              - prev_node_output_port
+              - prev_node_type
+              - prev_element_id
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              prev_node_output_port:
+                type: integer
+              prev_node_type:
+                type: string
+              prev_element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+###################################################################################
+#                                                                                 #
+#                         Element Initial Interface                               #
+#                                                                                 #
+###################################################################################
+
+  /init/create_element:
+    post:
+      tags:
+        - init
+      summary: 算子初始化接口
+      parameters:
+        - in: body
+          description: 算子初始化接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - node_type
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              node_type: 
+                type: string
+              model_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /init/delete_element:
+    post:
+      tags:
+        - init
+      summary: 算子删除接口
+      parameters:
+        - in: body
+          description: 算子删除接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - node_type
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              node_type:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+###################################################################################
+#                                                                                 #
+#                       parameterization Interface                                #
+#                                                                                 #
+###################################################################################
+  /parameterization/copy_version:
+    post:
+      tags:
+        - parameterization
+      summary: 拷贝画布
+      parameters:
+        - in: body
+          description: 拷贝画布参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - pipelining_id
+            properties:
+              version_id:
+                type: string
+              pipelining_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/CopyObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/publish:
+    post:
+      tags:
+        - parameterization
+      summary: 发布流水线接口
+      parameters:
+        - in: body
+          description: 发布流水线接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+            properties:
+              version_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/PublishObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/api_schedule:
+    post:
+      tags:
+        - parameterization
+      summary: 接口调用执行流水线接口
+      parameters:
+        - in: body
+          description: 接口调用执行流水线接口参数
+          schema:
+            type: object
+            required:
+            properties:
+              sync_input_data:
+                type: array
+                items:
+                  $ref: '#/definitions/SyncInputData'
+        - in: path
+          name: publish_id
+          description: 发布标识
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/manual_execute:
+    post:
+      tags:
+        - parameterization
+      summary: 手动执行流水线接口
+      parameters:
+        - in: body
+          description: 手动执行流水线接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+            properties:
+              version_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/element_id:
+    post:
+      tags:
+        - parameterization
+      summary: 根据版本标识和算子类型获取算子标识
+      parameters:
+        - in: body
+          description: 根据版本标识和算子类型获取算子标识参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - node_type
+            properties:
+              version_id:
+                type: string
+              node_type:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/ElementObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/config_data_model:
+    post:
+      tags:
+        - parameterization
+      summary: 数据模型算子配置
+      parameters:
+        - in: body
+          description: 数据模型算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - data_model_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              data_model_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/data_model:
+    post:
+      tags:
+        - parameterization
+      summary: 获取数据模型算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据模型算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/DataModelObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/config_role_setting:
+    post:
+      tags:
+        - parameterization
+      summary: 角色配置算子配置
+      parameters:
+        - in: body
+          description: 角色配置算子配置参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - role_setting_fields
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              role_setting_fields:
+                type: array
+                items:
+                  $ref: '#/definitions/RoleSettingField'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/role_setting:
+    post:
+      tags:
+        - parameterization
+      summary: 获取角色设置算子配置接口
+      parameters:
+        - in: body
+          description: 获取角色设置算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/RoleSettingObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/config_data_split:
+    post:
+      tags:
+        - parameterization
+      summary: 数据切分算子配置
+      parameters:
+        - in: body
+          description: 数据切分算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+            
+  /parameterization/data_split:
+    post:
+      tags:
+        - parameterization
+      summary: 获取数据切分算子配置接口
+      parameters:
+        - in: body
+          description: 获取数据切分算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/config_custom_algorithm:
+      post:
+        tags:
+          - parameterization
+        summary: 自定义算法算子配置
+        parameters:
+          - in: body
+            description: 自定义算法算子参数
+            schema:
+              type: object
+              required:
+                - version_id
+                - element_id
+                - algorithm_id
+              properties:
+                version_id:
+                  type: string
+                element_id:
+                  type: string
+                algorithm_id:
+                  type: string
+                params:
+                  type: array
+                  items:
+                    $ref: '#/definitions/Param'
+        responses:
+          '200':
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/Response'
+
+  /parameterization/custom_algorithm:
+    post:
+      tags:
+        - parameterization
+      summary: 获取自定义算法算子配置接口
+      parameters:
+        - in: body
+          description: 获取自定义算法算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/AlgorithmObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/config_model_apply:
+      post:
+        tags:
+          - parameterization
+        summary: 模型应用算子配置
+        parameters:
+          - in: body
+            description: 模型应用算子参数
+            schema:
+              type: object
+              required:
+                - version_id
+                - element_id
+                - fields
+              properties:
+                version_id:
+                  type: string
+                element_id:
+                  type: string
+                fields:
+                  type: array
+                  items:
+                    $ref: '#/definitions/Field'
+        responses:
+          '200':
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/Response'
+
+  /parameterization/config_regression_evaluate:
+      post:
+        tags:
+          - parameterization
+        summary: 回归评估算子配置
+        parameters:
+          - in: body
+            description: 回归评估算子参数
+            schema:
+              type: object
+              required:
+                - version_id
+                - element_id
+                - evaluate_list
+              properties:
+                version_id:
+                  type: string
+                element_id:
+                  type: string
+                evaluate_list:
+                  type: array
+                  items:
+                    type: string
+        responses:
+          '200':
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/Response'
+
+  /parameterization/model_apply:
+    post:
+      tags:
+        - parameterization
+      summary: 获取模型应用算子配置接口
+      parameters:
+        - in: body
+          description: 获取模型应用算子配置接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/ModelApplyObject'
+              message:
+                type: string
+                description: 消息信息     
+
+  /parameterization/config_sync_input:
+    post:
+      tags:
+        - parameterization
+      summary: 同步输入算子配置
+      parameters:
+        - in: body
+          description: 同步输入算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              fields:
+                type: array
+                items:
+                  $ref: '#/definitions/Field'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response' 
+
+  /parameterization/sync_input:
+    post:
+      tags:
+        - parameterization
+      summary: 获取同步输入算子配置接口
+      parameters:
+        - in: body
+          description: 获取同步输入算子配置参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/consistency_analysis:
+    post:
+      tags:
+        - parameterization
+      summary: 一致性分析接口
+      parameters:
+        - in: body
+          description: 一致性分析参数
+          schema:
+            type: object
+            required:
+              - y1
+              - y2
+            properties:
+              y1:
+                type: array
+                items:
+                  type: integer
+              y2:
+                type: array
+                items:
+                  type: integer
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/algorithm_params:
+    post:
+      tags:
+        - parameterization
+      summary: 获取算法对应参数接口
+      parameters:
+        - in: body
+          description: 获取算法对应接口参数
+          schema:
+            type: object
+            required:
+              - algorithm_id
+            properties:
+              algorithm_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+  /parameterization/input_params:
+    post:
+      tags:
+        - parameterization
+      summary: 获取输入参数接口
+      parameters:
+        - in: body
+          description: 获取输入参数接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - pipelining_id
+            properties:
+              version_id:
+                type: string
+              pipelining_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/ParamsObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/output_params:
+    post:
+      tags:
+        - parameterization
+      summary: 获取输出参数接口
+      parameters:
+        - in: body
+          description: 获取输出参数接口参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - pipelining_id
+            properties:
+              version_id:
+                type: string
+              pipelining_id:
+                type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 成功失败标识
+              data:
+                $ref: '#/definitions/ParamsObject'
+              message:
+                type: string
+                description: 消息信息
+
+  /parameterization/config_analogy_estimation_algorithm:
+    post:
+      tags:
+        - parameterization
+      summary: 类比法算子配置
+      parameters:
+        - in: body
+          description: 类比法算子参数
+          schema:
+            type: object
+            required:
+              - version_id
+              - element_id
+              - weight
+            properties:
+              version_id:
+                type: string
+              element_id:
+                type: string
+              weight:
+                type: array
+                items:
+                  $ref: '#/definitions/AnalogyEstimationAlgorithmField'
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Response'
+
+###################################################################################
+#                                                                                 #
+#                        Entity Definition Interface                              #
+#                                                                                 #
+###################################################################################
+definitions:
+  CopyObject:
+    type: object
+    properties:
+      new_version_id:
+        type: string
+        description: 拷贝后的版本标识
+  PublishObject:
+    type: object
+    properties:
+      publish_id:
+        type: string
+        description: 发布标识
+  ElementObject:
+    type: object
+    properties:
+      element_id:
+        type: string
+        description: 算子标识
+  DataModelObject:
+    type: object
+    properties:
+      data_model_name:
+        type: string
+        description: 数据模型名称
+      data_model_table_name:
+        type: string
+        description: 数据模型表名称
+  RoleSettingObject:
+    type: object
+    properties:
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/Field'
+      role_setting_fields:
+        type: array
+        items:
+          $ref: '#/definitions/RoleSettingField'
+  AlgorithmObject:
+    type: object
+    properties:
+      params:
+        type: array
+        items:
+          $ref: '#/definitions/ParamsField'
+  ParamsObject:
+    type: object
+    properties:
+      json_key:
+        type: string
+      nick_name:
+        type: string
+      value_type:
+        type: string
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/Params'
+
+  Params:
+    type: object
+    properties:
+      data_type:
+        type: string
+      name:
+        type: string
+      nick_name:
+        type: string
+
+
+
+  ModelApplyObject:
+    type: object
+    properties:
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/Field'
+  InsightObject:
+    type: object
+    properties:
+      fields:
+        type: array
+        items:
+          $ref: '#/definitions/Field'
+      data:
+        type: object
+  Response:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: 成功失败标识
+      data:
+        type: object
+        description: 负载数据
+      message:
+        type: string
+        description: 消息信息
+  Field:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 英文标识
+      nick_name:
+        type: string
+        description: 昵称
+      data_type:
+        type: string
+        description: 数据类型
+        enum: [ NUMBER, DATE, VARCHAR2 ]
+  AddField:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 英文标识
+      nick_name:
+        type: string
+        description: 昵称
+      data_type:
+        type: string
+        description: 数据类型
+        enum: [ NUMBER, DATE, VARCHAR2 ]
+      expression:
+        type: string
+        description: 表达式
+  RoleSettingField:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 英文标识
+        nick_name:
+          type: string
+          description: 昵称
+        role_type:
+          type: string
+          description: 角色类型
+          enum: [ X, Y ]
+  ParamsField:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 英文标识
+        name:
+          type: string
+          description: 昵称
+        value:
+          type: string
+          description: 值
+  ProcessField:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 英文标识
+      process_type:
+        type: string
+        description: 处理类型
+        enum: [ boxcox, nplog ]
+  ConvertField:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 英文标识
+      date_type:
+        type: string
+        description: 转换前类型
+        enum: [ NUMBER, DATE, VARCHAR2 ]
+      to_type:
+        type: string
+        description: 转换后类型
+        enum: [ NUMBER, DATE, VARCHAR2 ]
+  Param:
+    type: object
+    properties:
+      param_id:
+        type: string
+        description: 参数标识
+      value:
+        type: string
+        description: 值
+  Order:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 标识
+      sort:
+        type: integer
+        description: 顺序
+  CompareField:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 英文标识
+      value:
+        type: object
+        description: 比较值
+      compare_type:
+        type: string
+        description: 比较类型
+        enum: [great_than, great_than_or_equal, equal, less_than, less_than_or_equal,
+               not_equal, is_null, is_not_null]
+  SyncInputData:
+    type: object
+
+  AnalogyEstimationAlgorithmField:
+    type: object
+    properties:
+      name:
+        type: string
+        description: 英文标识
+      weight:
+        type: number
+        description: 权重
